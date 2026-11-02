@@ -37,24 +37,24 @@ REQUIRED_OPENERS = ["**The problem.**", "**The question this chapter answers.**"
 # whole words. Course-specific lists live in course.json.
 BUILTIN_FORBIDDEN = [
     # programming languages and runtimes
-    "python", "javascript", "typescript", "java", "c++", "c#", "golang", "rust",
-    "ruby", "php", "swift", "kotlin", "scala", "haskell", "perl", "matlab",
+    "python", "javascript", "typescript", "Java", "c++", "c#", "golang", "Rust",
+    "Ruby", "php", "Swift", "kotlin", "Scala", "haskell", "perl", "matlab",
     "node.js", "nodejs", "bash", "powershell", "sql", "r language",
     # big vendors and platforms
     "google", "microsoft", "amazon", "aws", "azure", "meta ads", "facebook",
     "instagram", "tiktok", "linkedin", "youtube", "openai", "chatgpt",
     "anthropic", "claude", "gemini", "hubspot", "salesforce", "mailchimp",
-    "shopify", "wordpress", "excel", "google sheets", "notion", "figma",
-    "canva", "semrush", "ahrefs", "ga4", "google analytics",
+    "shopify", "wordpress", "Excel", "google sheets", "Notion", "figma",
+    "Canva", "semrush", "ahrefs", "ga4", "google analytics",
     # dev tooling
     "github", "gitlab", "docker", "kubernetes", "react", "vue", "angular",
-    "django", "flask", "spring", "numpy", "pandas", "tensorflow", "pytorch",
+    "django", "Flask", "Spring", "numpy", "pandas", "tensorflow", "pytorch",
     "leetcode", "hackerrank",
 ]
 REAL_LANG_FENCES = {
-    "python", "py", "js", "javascript", "ts", "typescript", "java", "c", "cpp",
-    "c++", "csharp", "cs", "go", "rust", "rb", "ruby", "php", "swift", "kotlin",
-    "scala", "sql", "bash", "sh", "shell", "zsh", "powershell", "r", "matlab",
+    "python", "py", "js", "javascript", "ts", "typescript", "Java", "c", "cpp",
+    "c++", "csharp", "cs", "go", "Rust", "rb", "Ruby", "php", "Swift", "kotlin",
+    "Scala", "sql", "bash", "sh", "shell", "zsh", "powershell", "r", "matlab",
     "html", "css", "jsx", "tsx",
 }
 ALLOWED_FENCES_P12 = {"pseudo", "pseudocode", "text", "txt", "mermaid", "", "plain", "math", "latex"}
