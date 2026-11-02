@@ -192,7 +192,7 @@ def main() -> int:
 
     # PDF: pandoc -> Typst source that imports templates/book.typ, compiled with typst in dist/
     # (so relative image paths resolve). Fallback: pandoc + lualatex/xelatex.
-    common = ["pandoc", str(pdf_src), "--from", "markdown+raw_tex", "--toc", "--resource-path", str(folder)]
+    common = ["pandoc", str(pdf_src), "--from", "markdown+raw_tex-citations", "--toc", "--resource-path", str(folder)]
     tex_args = ["--standalone", "-V", "papersize=a4", "-V", "geometry:margin=2.2cm", "-V", "colorlinks=true"]
     engine_args = []
     if not use_typst:
@@ -210,7 +210,7 @@ def main() -> int:
         if use_typst:
             shutil.copy(root_tpl, dist / "book.typ")
             typ = dist / f"{slug}.typ"
-            r = subprocess.run(["pandoc", str(pdf_src), "--from", "markdown+raw_tex", "--to", "typst", "--standalone",
+            r = subprocess.run(["pandoc", str(pdf_src), "--from", "markdown+raw_tex-citations", "--to", "typst", "--standalone",
                                 "-V", "template=book.typ", "-o", str(typ)], capture_output=True, text=True)
             if r.returncode == 0:
                 r = subprocess.run(["typst", "compile", "--root", str(dist), typ.name, pdf.name],
