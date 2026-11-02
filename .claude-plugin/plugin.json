@@ -1,0 +1,8 @@
+{
+  "name": "principles-first-courses",
+  "version": "0.1.0",
+  "author": { "name": "sasajib", "url": "https://github.com/sasajib" },
+  "repository": "https://github.com/sasajib/principles-first",
+  "license": "MIT",
+  "keywords": ["course", "learning", "research", "education", "principles-first"]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "principles-first-courses",
+  "description": "Principles-first course generator",
+  "owner": { "name": "sasajib", "url": "https://github.com/sasajib" },
+  "plugins": [
+    {
+      "name": "principles-first-courses",
+      "source": "./",
+      "description": "Research a topic and write a principles-first course (problems, then principles with pseudocode, tools last)."
+    }
+  ]
+}
