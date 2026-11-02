@@ -23,7 +23,6 @@ scripts/publish.sh                   commit + push courses/<slug>
 
 | Path | Role | Change it when |
 |---|---|---|
-| `skills/course/SKILL.md` | Scoping questions, innovation auto-decision, outline pause, gate, publish, delivery summary | You want different questions, a different default depth, or to change the on/off rule |
 | `agents/course-author.md` | Research depth table, source priorities, outline design, chapter template, manifest schema, self-check | You want to change the pedagogy, phase structure or output files |
 | `agents/source-reader.md` | Reads 3-4 sources and returns structured notes (cheap model) | You want readers to extract something new |
 | `agents/innovation-scout.md` | Writes the open-problems chapter | You want a different closing chapter |

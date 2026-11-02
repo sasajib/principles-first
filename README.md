@@ -25,8 +25,9 @@ Example: digital marketing teaches "attention is scarce and bought at the margin
 The skill asks at most three questions (learner, end goal, depth), researches 8 to 40 real sources, shows you an outline to approve, writes one Markdown file per chapter, runs the quality gate, commits and pushes. A Standard course takes 10 to 20 minutes.
 
 
-```bash
 ```
+```
+
 
 
 ## What a course looks like
@@ -59,7 +60,6 @@ Every chapter follows one template: the problem, the question it answers, the pr
 
 ```
 .claude-plugin/     plugin and marketplace manifests
-skills/course/      the /course skill (team lead: scoping, outline approval, gate, publish)
 agents/             course-author, source-reader, innovation-scout
 scripts/            check_course.py (quality gate), render_diagrams.mjs, publish.sh, youtube-transcript.sh
 templates/          chapter template

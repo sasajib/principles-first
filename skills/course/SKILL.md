@@ -92,6 +92,7 @@ bash "$ROOT/scripts/publish.sh" "<slug>"
 
 It re-runs the checks, commits `courses/<slug>` and pushes. If the push fails (no remote, no network), say so and leave the commit local.
 
+
 ## 8. Deliver
 
 Tell the user, briefly:

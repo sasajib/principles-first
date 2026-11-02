@@ -43,6 +43,7 @@ What happens:
 4. **Writing.** One file per chapter. 10 to 20 minutes for Standard, 30+ for Deep.
 5. **Innovation chapter.** Runs automatically for practice fields (marketing, product, management), skipped for foundational ones (math, algorithms, physics). The reason is recorded in `course.json` and `00-README.md`.
 6. **Quality gate.** `scripts/check_course.py` must pass. The author fixes chapters, never the checker.
+7. **Publish.** Commit and push `courses/<slug>` to GitHub.
 
 ## Add to an existing course
 
