@@ -24,10 +24,8 @@ Example: digital marketing teaches "attention is scarce and bought at the margin
 
 The skill asks at most three questions (learner, end goal, depth), researches 8 to 40 real sources, shows you an outline to approve, writes one Markdown file per chapter, runs the quality gate, commits and pushes. A Standard course takes 10 to 20 minutes.
 
-Then study it:
 
 ```bash
-export GITHUB_TOKEN=$(gh auth token)       # repo is private
 ```
 
 
