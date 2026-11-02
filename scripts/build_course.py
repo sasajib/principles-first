@@ -146,7 +146,15 @@ def main() -> int:
             if mode == "image" and num:
                 cands = sorted(dist_dg.glob(f"{num}-*-{counters[num]}.png"))
                 if cands:
-                    return f"![]({cands[0].as_posix()}){{ width=85% }}\n"
+                    # size from the SVG aspect ratio so tall diagrams fit one page:
+                    # text block on A4 with 2.2cm margins is ~16.6cm x 25cm
+                    width_cm = 15.0
+                    svg = cands[0].with_suffix(".svg")
+                    vb = re.search(r'viewBox="[\d.\-]+ [\d.\-]+ ([\d.]+) ([\d.]+)"', svg.read_text()) if svg.exists() else None
+                    if vb:
+                        aspect = float(vb.group(2)) / max(float(vb.group(1)), 1e-6)
+                        width_cm = min(15.0, 17.0 / aspect)
+                    return f"![]({cands[0].as_posix()}){{ width={width_cm:.1f}cm }}\n"
             if src not in ascii_cache:
                 ascii_cache[src] = ascii_render(src).rstrip()
             return "```text\n" + ascii_cache[src] + "\n```\n"
