@@ -83,10 +83,14 @@ def strip_code_and_links(md: str) -> str:
 
 
 def find_forbidden(text: str, terms: list[str]) -> list[tuple[str, int]]:
+    """Terms written with a capital letter (e.g. "Plausible", "Notion") match
+    case-sensitively so ordinary words are not flagged; all-lowercase terms
+    match case-insensitively."""
     hits = []
     for term in terms:
         pat = r"(?<![\w.+#-])" + re.escape(term) + r"(?![\w+#-])"
-        for m in re.finditer(pat, text, flags=re.I):
+        flags = 0 if any(c.isupper() for c in term) else re.I
+        for m in re.finditer(pat, text, flags=flags):
             line = text.count("\n", 0, m.start()) + 1
             hits.append((term, line))
     return hits
@@ -126,7 +130,7 @@ def main() -> int:
         return headings.get(name, name)
 
     forbidden = BUILTIN_FORBIDDEN + list(manifest.get("forbidden_in_phases_1_2", []))
-    forbidden = sorted(set(t.lower() for t in forbidden), key=len, reverse=True)
+    forbidden = sorted(set(forbidden), key=len, reverse=True)
     if len(manifest.get("forbidden_in_phases_1_2", [])) < 10 and manifest.get("status") == "complete":
         warnings.append("course.json: forbidden_in_phases_1_2 has fewer than 10 entries; add this topic's tools and vendors")
 
