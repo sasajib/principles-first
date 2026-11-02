@@ -73,6 +73,8 @@ Checker errors and what to do:
 | `Phase 3 chapter never references a principle chapter by number` | Add "implements chapter 4" style back-references |
 | `flashcards.tsv: malformed lines` | Exactly one tab per line, no header |
 
+Forbidden terms: write tool names in `course.json.forbidden_in_phases_1_2` with their real capitalisation (`Plausible`, `Notion`). Capitalised terms match case-sensitively so ordinary words like "plausible" are not flagged; all-lowercase terms match any case.
+
 Translated courses: keep the English headings, or translate them and put the mapping in `course.json.headings` (`{"## The principle": "## Das Prinzip", ...}`).
 
 ## Export a PDF
