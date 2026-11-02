@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Check, render diagrams, commit and push one course.
+# Check, render diagrams, build the uploadable bundle (md/pdf/tex), commit and push one course.
 # Usage: bash scripts/publish.sh <slug> [commit message]
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -14,6 +14,8 @@ if [ -d "$ROOT/node_modules/beautiful-mermaid" ]; then
 else
   echo "note: run 'npm install' in $ROOT to render diagrams to SVG"
 fi
+
+python3 "$ROOT/scripts/build_course.py" "$DIR"   # dist/<slug>.md, .pdf, .tex, diagrams/
 
 cd "$ROOT"
 git add "courses/$SLUG"

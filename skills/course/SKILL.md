@@ -82,7 +82,7 @@ node "$ROOT/scripts/render_diagrams.mjs" "$ROOT/courses/<slug>"
 
 The checker fails if a Phase 1 or Phase 2 chapter names a tool, vendor or language, if a chapter is missing a required section, if answers or flashcards are missing, or if `course.json` is inconsistent. Fix every failure by editing the chapter (move tool talk to Phase 3, or reword), then re-run until it passes. Do not weaken the checker to make it pass.
 
-## 7. Publish
+## 7. Build the bundle and publish
 
 Ask nothing. Run:
 
@@ -90,7 +90,7 @@ Ask nothing. Run:
 bash "$ROOT/scripts/publish.sh" "<slug>"
 ```
 
-It re-runs the checks, commits `courses/<slug>` and pushes. If the push fails (no remote, no network), say so and leave the commit local.
+It re-runs the checks, renders diagrams, builds the uploadable bundle with `scripts/build_course.py` into `courses/<slug>/dist/` (`<slug>.md` single Markdown with diagrams as text drawings, `<slug>.pdf` with diagrams as images, `<slug>.tex`, and `diagrams/*.png`), commits `courses/<slug>` and pushes. If the push fails (no remote, no network), say so and leave the commit local. If the PDF step fails, say so and still deliver the Markdown.
 
 
 ## 8. Deliver
@@ -100,3 +100,4 @@ Tell the user, briefly:
 - Chapters per phase, sources consulted and read in full, concepts validated by quorum
 - Whether the innovation chapter ran and why
 - Any assumptions the author made that the user may want to revisit
+- The files to upload: absolute paths of `dist/<slug>.pdf` and `dist/<slug>.md`, page count of the PDF, and that answers are in `99-answers.md` on GitHub (deliberately not in the bundle unless `--with-answers` was used)

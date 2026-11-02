@@ -43,7 +43,7 @@ What happens:
 4. **Writing.** One file per chapter. 10 to 20 minutes for Standard, 30+ for Deep.
 5. **Innovation chapter.** Runs automatically for practice fields (marketing, product, management), skipped for foundational ones (math, algorithms, physics). The reason is recorded in `course.json` and `00-README.md`.
 6. **Quality gate.** `scripts/check_course.py` must pass. The author fixes chapters, never the checker.
-7. **Publish.** Commit and push `courses/<slug>` to GitHub.
+7. **Bundle and publish.** `build_course.py` writes `dist/<slug>.md`, `.pdf`, `.tex` and `diagrams/*.png`; then commit and push.
 
 ## Add to an existing course
 
@@ -78,14 +78,17 @@ Forbidden terms: write tool names in `course.json.forbidden_in_phases_1_2` with 
 
 Translated courses: keep the English headings, or translate them and put the mapping in `course.json.headings` (`{"## The principle": "## Das Prinzip", ...}`).
 
-## Export a PDF
+## Rebuild the bundle
 
 ```bash
-cd courses/<slug>
-pandoc 00-README.md 0[1-9]-*.md [1-9][0-9]-*.md 99-answers.md -o course.pdf --pdf-engine=typst --toc -V papersize=a4
+python3 scripts/build_course.py courses/<slug>                  # md + pdf + tex
+python3 scripts/build_course.py courses/<slug> --with-answers   # include the answer key as an appendix
+python3 scripts/build_course.py courses/<slug> --formats md     # only the single Markdown
 ```
 
-Needs `pandoc` and `typst`. Mermaid blocks will appear as code in the PDF; swap them for the SVGs in `diagrams/` if you need pictures.
+Diagram handling per format: PDF and LaTeX get PNG images (SVG from beautiful-mermaid, converted with `rsvg-convert`); the single Markdown gets a Unicode text drawing of each diagram so it has no external dependencies. The answer key is excluded by default so a tutor reading the file cannot hand out answers.
+
+Requirements: `pandoc`, `typst` (a single binary, installed in `~/.local/bin`; `lualatex` works as fallback), `rsvg-convert` (librsvg), Node with `npm install` done in the repo.
 
 ## Cost and time
 

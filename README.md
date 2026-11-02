@@ -22,13 +22,20 @@ Example: digital marketing teaches "attention is scarce and bought at the margin
 /course courses/example-course            # add a chapter to an existing course
 ```
 
-The skill asks at most three questions (learner, end goal, depth), researches 8 to 40 real sources, shows you an outline to approve, writes one Markdown file per chapter, runs the quality gate, commits and pushes. A Standard course takes 10 to 20 minutes.
+The skill asks at most three questions (learner, end goal, depth), researches 8 to 40 real sources, shows you an outline to approve, writes one Markdown file per chapter, runs the quality gate, builds the bundle, commits and pushes. A Standard course takes 10 to 20 minutes.
+
+**The deliverable** is `courses/<slug>/dist/`:
+
+| File | Use |
+|---|---|
+| `<slug>.md` | Same content as one Markdown file; diagrams as text drawings, no external files. |
+| `<slug>.tex` | LaTeX source, images in `dist/diagrams/`. |
+| `diagrams/*.png`, `*.svg` | Every diagram on its own. |
 
 
+```bash
+python3 scripts/build_course.py courses/<slug> [--with-answers] [--formats md,pdf,tex]
 ```
-```
-
-
 
 ## What a course looks like
 
@@ -44,6 +51,7 @@ courses/<slug>/
   sources.md         every source, single-source claims flagged
   research-log.md    quorum tracking and research metadata
   diagrams/          SVGs rendered from the chapters' Mermaid blocks
+  dist/              the uploadable bundle: <slug>.md, <slug>.pdf, <slug>.tex, diagrams/*.png
 ```
 
 Every chapter follows one template: the problem, the question it answers, the principle, a by-hand walkthrough, where it breaks, retrieval questions, a by-hand exercise, sources. See [templates/chapter.md](templates/chapter.md).
@@ -61,7 +69,6 @@ Every chapter follows one template: the problem, the question it answers, the pr
 ```
 .claude-plugin/     plugin and marketplace manifests
 agents/             course-author, source-reader, innovation-scout
-scripts/            check_course.py (quality gate), render_diagrams.mjs, publish.sh, youtube-transcript.sh
 templates/          chapter template
 courses/            generated courses, one folder each
 docs/               documentation
