@@ -67,12 +67,18 @@ Checker errors and what to do:
 
 | Error | Fix |
 |---|---|
-| `Phase 1-2 chapter names a tool/vendor/language: 'x'` | Reword in terms of the principle, or move that sentence to a Phase 3 chapter |
+| `Phase 1-2 chapter names a tool/vendor/language: 'x'` | Reword in terms of the principle, or move that sentence to a Part III chapter |
 | `Phase 1-2 code block tagged 'python'` | Retag as ```pseudo and rewrite as pseudocode |
-| `missing section ## Walkthrough` | Add the section; headings are checked exactly (see `templates/chapter.md`) |
+| `opening before the first section is N words` | Open inside a concrete situation, two to five paragraphs, before any heading |
+| `only N content sections` / `missing section ## Summary` / `## Exercises must be last` | Follow `templates/chapter.md`: three or more content sections, then Summary, then Exercises |
+| `prose: banned construction ...` / `prose: em/en dashes ...` / `prose: AI vocabulary ...` / `prose: meta-commentary ...` | See `references/writing-rules.md`; rewrite the sentence, do not patch the word |
+| `prose: template-slot heading` / `chapter contains a '## Sources' section` | Headings name content; sources go in `sources.md` under the chapter |
+| `00-README.md: contains reading-time estimates` | The preface of a book has none |
 | `no section for '<title>' in 99-answers.md` | Add `## <N>. <Chapter title>` with numbered answers |
 | `Phase 3 chapter never references a principle chapter by number` | Add "implements chapter 4" style back-references |
 | `flashcards.tsv: malformed lines` | Exactly one tab per line, no header |
+
+Run the prose linter alone on one chapter while editing: `python3 scripts/lint_prose.py courses/<slug>/04-....md`.
 
 Forbidden terms: write tool names in `course.json.forbidden_in_phases_1_2` with their real capitalisation (`Plausible`, `Notion`). Capitalised terms match case-sensitively so ordinary words like "plausible" are not flagged; all-lowercase terms match any case.
 
@@ -88,7 +94,7 @@ python3 scripts/build_course.py courses/<slug> --formats md     # only the singl
 
 Diagram handling per format: PDF and LaTeX get PNG images (SVG from beautiful-mermaid, converted with `rsvg-convert`); the single Markdown gets a Unicode text drawing of each diagram so it has no external dependencies. The answer key is excluded by default so a tutor reading the file cannot hand out answers.
 
-Requirements: `pandoc`, `typst` (a single binary, installed in `~/.local/bin`; `lualatex` works as fallback), `rsvg-convert` (librsvg), Node with `npm install` done in the repo.
+The PDF uses `templates/book.typ` (title page, contents, part pages, chapter pages with running headers). Requirements: `pandoc`, `typst` (a single binary, installed in `~/.local/bin`; `lualatex` works as fallback without the book template), `rsvg-convert` (librsvg), Node with `npm install` done in the repo.
 
 ## Cost and time
 

@@ -16,9 +16,13 @@ Enforced by `scripts/check_course.py`: a built-in list of languages and big vend
 
 Phase 3 opens with a table mapping each principle to the tools that implement it. Every tool chapter says "this implements chapter N" and names what the tool hides from you. Enforced: Phase 3 chapters must reference a principle chapter by number.
 
-## 4. Clear and concise
+## 4. A book, not a worksheet
 
-Short sentences, one idea per paragraph, a worked example over a definition, 700 to 1500 words of body per chapter. Longer chapters get split. The checker warns outside 500 to 1800 words and on commanding tone ("you must").
+Chapters open inside a concrete situation, carry three to six sections with headings that name content, show every procedure applied step by step with intermediate states, give at least two examples per principle (one real, with its real figures), state where the principle breaks and the strongest counter-view, and end with a Summary and Exercises. Chapters run 2,000 to 4,500 words; a Standard book is 35,000 to 55,000 words. `references/chapter-craft.md` is the full specification; it follows publisher practice (Manning's chapter plan and opening-with-expectations, Pragmatic's reader-as-traveller) and the worked-example research (Sweller; Atkinson, Derry, Renkl and Wortham 2000; van Gog, Paas and Sweller 2010), which finds that novices learn more from studied step-by-step examples than from unguided problem solving.
+
+Prose follows `references/writing-rules.md`: concrete before abstract, explanations in prose rather than bullets, no meta-commentary or recap endings, invisible citations with every claim recorded in `sources.md`, and a catalogue of AI-writing tells (not-X-but-Y, staged openers, forced triads, dash overuse, inflated vocabulary) that `scripts/lint_prose.py` counts. The catalogue is adapted from luquiluke/claude-book-skill and blader/humanizer, both MIT, which in turn follow Wikipedia's "Signs of AI writing".
+
+A separate `book-editor` agent reviews each chapter against `references/editor-rubric.md` (plan delivery, pedagogy, principles-first, voice, continuity, sourcing) and returns SHIP or REVISE; the author revises for up to two cycles. This mirrors the writer, editor, reviewer loop in the better open-source book pipelines (book-factory, claude-book-skill).
 
 ## 5. Active learning
 

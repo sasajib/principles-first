@@ -41,7 +41,7 @@ def main() -> int:
     manifest = json.loads((folder / "course.json").read_text())
     slug = manifest["slug"]
     title = manifest.get("title", slug)
-    phases = manifest["phases"]
+    phases = manifest.get("parts") or manifest["phases"]
     order = (list(phases.get("problems", [])) + list(phases.get("principles", []))
              + list(phases.get("tools", [])) + list(phases.get("capstone", [])))
     extra = sorted(p.name for p in folder.glob("[0-9][0-9]-*.md")
@@ -66,13 +66,14 @@ def main() -> int:
     parts: list[str] = []
     parts.append(f"---\ntitle: \"{title}\"\nsubtitle: \"Problems first, principles second, tools last\"\n"
                  f"date: \"{manifest.get('generated_at', '')}\"\nlang: {manifest.get('language', 'en')}\n"
+                 f"author: \"{manifest.get('author', 'principles-first-courses')}\"\n"
                  f"toc: true\ntoc-depth: 2\nnumbersections: false\n---\n")
     readme = (folder / "00-README.md").read_text()
     readme = re.sub(r"^# .*\n", "", readme, count=1)  # pandoc title block carries the title
     for sec in ("Files", "Innovation chapter", "Generation notes"):   # project meta, not book content
         readme = re.sub(r"^## " + sec + r"\s*$.*?(?=^## |\Z)", "", readme, flags=re.M | re.S)
     readme = re.sub(r"^## ", "### ", readme, flags=re.M)
-    readme = "# Preface\n\n" + readme.strip()
+    readme = "## Preface\n\n" + readme.strip()
     parts.append(readme + "\n\n\\newpage\n")
 
     phase_titles = {}
@@ -94,19 +95,23 @@ def main() -> int:
             parts.append(f"\n# {ph}\n")
             last_phase = ph
         md = p.read_text().strip()
-        md = re.sub(r"^# ", "## ", md, count=1, flags=re.M)          # chapter title one level down
-        md = re.sub(r"^## (The principle|Walkthrough|Where it breaks|Check yourself|Do it by hand|Sources)\s*$",
-                    r"### \1", md, flags=re.M)
+        # sections one level down first, then the chapter title (so it is not demoted twice)
+        md = re.sub(r"^#### ", "##### ", md, flags=re.M)
+        md = re.sub(r"^### ", "#### ", md, flags=re.M)
+        md = re.sub(r"^## ", "### ", md, flags=re.M)
+        md = re.sub(r"^# ", "## ", md, count=1, flags=re.M)
         parts.append(md + "\n\n\\newpage\n")
 
     if with_answers and (folder / "99-answers.md").exists():
         ans = (folder / "99-answers.md").read_text().strip()
         ans = re.sub(r"^# .*\n", "", ans, count=1)
-        parts.append("\n# Appendix A — Answers\n\n" + ans + "\n\n\\newpage\n")
+        ans = re.sub(r"^### ", "#### ", ans, flags=re.M); ans = re.sub(r"^## ", "### ", ans, flags=re.M)
+        parts.append("\n## Answers to the exercises\n\n" + ans + "\n\n\\newpage\n")
     if (folder / "sources.md").exists():
         src = (folder / "sources.md").read_text().strip()
         src = re.sub(r"^# .*\n", "", src, count=1)
-        parts.append("\n# Appendix — Sources\n\n" + src + "\n")
+        src = re.sub(r"^### ", "#### ", src, flags=re.M); src = re.sub(r"^## ", "### ", src, flags=re.M)
+        parts.append("\n## Notes and sources\n\n" + src + "\n")
 
     merged = "\n".join(parts)
     merged = re.sub(r"```pseudo(code)?\s*\n", "```text\n", merged)  # pandoc has no 'pseudo' lexer
@@ -154,7 +159,8 @@ def main() -> int:
                     if vb:
                         aspect = float(vb.group(2)) / max(float(vb.group(1)), 1e-6)
                         width_cm = min(15.0, 17.0 / aspect)
-                    return f"![]({cands[0].as_posix()}){{ width={width_cm:.1f}cm }}\n"
+                    rel = cands[0].relative_to(dist).as_posix()
+                    return f"![]({rel}){{ width={width_cm:.1f}cm }}\n"
             if src not in ascii_cache:
                 ascii_cache[src] = ascii_render(src).rstrip()
             return "```text\n" + ascii_cache[src] + "\n```\n"
@@ -176,19 +182,23 @@ def main() -> int:
 
     counters.clear()
     pdf_md = re.sub(mermaid_re, make_repl("image"), merged, flags=re.S)
+    root_tpl = Path(__file__).resolve().parent.parent / "templates" / "book.typ"
+    use_typst = bool(shutil.which("typst")) and root_tpl.exists()
     pdf_src = dist / f".{slug}.pandoc.md"
-    pdf_src.write_text(pdf_md if not shutil.which("typst") else pdf_md.replace("\\newpage\n", ""))
+    if use_typst:
+        # the book template draws its own contents page; drop pandoc's toc flag and raw LaTeX breaks
+        pdf_md = re.sub(r"^toc(-depth)?:.*\n", "", pdf_md, flags=re.M).replace("\\newpage\n", "")
+    pdf_src.write_text(pdf_md)
 
-    # PDF engine: typst (single static binary, bundled fonts, unicode-safe) preferred;
-    # lualatex / xelatex as fallbacks. The .tex output always comes from pandoc itself.
-    if shutil.which("typst"):
-        engine_args = ["--pdf-engine=typst", "-V", "papersize=a4", "-V", "margin-x=2.2cm", "-V", "margin-y=2.2cm"]
-    else:
+    # PDF: pandoc -> Typst source that imports templates/book.typ, compiled with typst in dist/
+    # (so relative image paths resolve). Fallback: pandoc + lualatex/xelatex.
+    common = ["pandoc", str(pdf_src), "--from", "markdown+raw_tex", "--toc", "--resource-path", str(folder)]
+    tex_args = ["--standalone", "-V", "papersize=a4", "-V", "geometry:margin=2.2cm", "-V", "colorlinks=true"]
+    engine_args = []
+    if not use_typst:
         engine = "lualatex" if shutil.which("lualatex") else "xelatex"
         engine_args = [f"--pdf-engine={engine}", "-V", "papersize=a4", "-V", "geometry:margin=2.2cm",
                        "-V", "mainfont=DejaVu Serif", "-V", "monofont=DejaVu Sans Mono", "-V", "colorlinks=true"]
-    common = ["pandoc", str(pdf_src), "--from", "markdown+raw_tex", "--toc", "--resource-path", str(folder)]
-    tex_args = ["--standalone", "-V", "papersize=a4", "-V", "geometry:margin=2.2cm", "-V", "colorlinks=true"]
     rc = 0
     if "tex" in formats:
         tex = dist / f"{slug}.tex"
@@ -197,8 +207,18 @@ def main() -> int:
         rc |= r.returncode
     if "pdf" in formats:
         pdf = dist / f"{slug}.pdf"
-        r = subprocess.run(common + engine_args + ["-o", str(pdf)], capture_output=True, text=True)
-        print(f"wrote {pdf}" if r.returncode == 0 else f"pdf failed: {r.stderr[-1200:]}")
+        if use_typst:
+            shutil.copy(root_tpl, dist / "book.typ")
+            typ = dist / f"{slug}.typ"
+            r = subprocess.run(["pandoc", str(pdf_src), "--from", "markdown+raw_tex", "--to", "typst", "--standalone",
+                                "-V", "template=book.typ", "-o", str(typ)], capture_output=True, text=True)
+            if r.returncode == 0:
+                r = subprocess.run(["typst", "compile", "--root", str(dist), typ.name, pdf.name],
+                                   cwd=str(dist), capture_output=True, text=True)
+            print(f"wrote {pdf}" if r.returncode == 0 else f"pdf failed: {r.stderr[-1500:]}")
+        else:
+            r = subprocess.run(common + engine_args + ["-o", str(pdf)], capture_output=True, text=True)
+            print(f"wrote {pdf}" if r.returncode == 0 else f"pdf failed: {r.stderr[-1200:]}")
         rc |= r.returncode
     pdf_src.unlink(missing_ok=True)
     return 1 if rc else 0

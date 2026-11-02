@@ -8,13 +8,17 @@ Fails (exit 1) when:
   * a Phase 1 or Phase 2 chapter names a tool, vendor, product, library or
     programming language (built-in list + course.json.forbidden_in_phases_1_2)
   * a Phase 1 or Phase 2 code block is tagged with a real language
-  * a chapter lacks a required section
-  * a chapter has no "Check yourself" questions, or 99-answers.md lacks a
-    section for it
+  * a chapter lacks the book form: an opening before the first section, at least
+    three content sections, then "## Summary" and "## Exercises" (3+ numbered)
+  * a chapter has a "## Sources" section (sources live in sources.md) or a
+    template-slot heading; or 99-answers.md lacks a section for it
+  * scripts/lint_prose.py reports an error for the chapter (banned constructions,
+    dashes, AI vocabulary, meta-commentary)
   * flashcards.tsv is missing, empty, or malformed
-  * 00-README.md or sources.md is missing
-Warnings (exit 0 unless --strict): chapter body outside 500-1800 words,
-missing mermaid/pseudo blocks where expected, "you must/should" tone.
+  * 00-README.md, sources.md or outline.md is missing; preface contains
+    reading-time estimates
+Warnings (exit 0 unless --strict): chapter body outside 1800-5000 words,
+prose-linter warnings, commanding tone.
 """
 from __future__ import annotations
 
@@ -23,15 +27,14 @@ import re
 import sys
 from pathlib import Path
 
-REQUIRED_SECTIONS = [
-    "## The principle",
-    "## Walkthrough",
-    "## Where it breaks",
-    "## Check yourself",
-    "## Do it by hand",
-    "## Sources",
-]
-REQUIRED_OPENERS = ["**The problem.**", "**The question this chapter answers.**"]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from lint_prose import lint_file as _lint_prose
+except Exception:  # pragma: no cover
+    _lint_prose = None
+
+REQUIRED_SECTIONS = ["## Summary", "## Exercises"]
+MIN_CONTENT_SECTIONS = 3
 
 # Generic names that never belong in Phase 1-2. Matched case-insensitively as
 # whole words. Course-specific lists live in course.json.
@@ -115,10 +118,10 @@ def main() -> int:
         print(f"FAIL: course.json invalid: {exc}")
         return 1
 
-    phases = manifest.get("phases") or {}
+    phases = manifest.get("parts") or manifest.get("phases") or {}
     for key in ("problems", "principles", "tools", "capstone"):
         if key not in phases:
-            errors.append(f"course.json: phases.{key} missing")
+            errors.append(f"course.json: parts.{key} missing")
     p12 = list(phases.get("problems", [])) + list(phases.get("principles", []))
     p3 = list(phases.get("tools", [])) + list(phases.get("capstone", []))
     all_chapters = p12 + p3
@@ -134,11 +137,17 @@ def main() -> int:
     if len(manifest.get("forbidden_in_phases_1_2", [])) < 10 and manifest.get("status") == "complete":
         warnings.append("course.json: forbidden_in_phases_1_2 has fewer than 10 entries; add this topic's tools and vendors")
 
-    for required in ("00-README.md", "99-answers.md", "flashcards.tsv", "sources.md"):
+    for required in ("00-README.md", "99-answers.md", "flashcards.tsv", "sources.md", "outline.md"):
         if not (folder / required).exists():
             errors.append(f"{required} missing")
 
     answers = (folder / "99-answers.md").read_text() if (folder / "99-answers.md").exists() else ""
+    if (folder / "00-README.md").exists():
+        pre = (folder / "00-README.md").read_text()
+        if re.search(r"\b\d+\s*(?:min|mins|minutes|hours?)\b", pre, flags=re.I):
+            errors.append("00-README.md: contains reading-time estimates; the preface of a book has none")
+            if bad in pre:
+                errors.append(f"00-README.md: contains '{bad}'; project meta does not belong in the preface")
 
     for fname in all_chapters:
         path = folder / fname
@@ -148,28 +157,45 @@ def main() -> int:
         md = path.read_text()
         tag = f"{fname}"
 
-        for opener in REQUIRED_OPENERS:
-            if h(opener) not in md:
-                errors.append(f"{tag}: missing opener {opener}")
+        # Book form: opening prose before the first "## ", 3+ content sections, Summary, Exercises
+        first_sec = re.search(r"^## ", md, flags=re.M)
+        opening = md[:first_sec.start()] if first_sec else md
+        opening_words = len(re.findall(r"\b\w+\b", re.sub(r"^#.*$", "", opening, flags=re.M)))
+        if opening_words < 80:
+            errors.append(f"{tag}: opening before the first section is {opening_words} words; open inside a concrete situation (2-5 paragraphs)")
+        heads = [m.group(1).strip() for m in re.finditer(r"^## (.*)$", md, flags=re.M)]
+        content_heads = [x for x in heads if x.lower().rstrip(".:") not in ("summary", "exercises")]
+        if len(content_heads) < MIN_CONTENT_SECTIONS:
+            errors.append(f"{tag}: only {len(content_heads)} content sections; a chapter has at least {MIN_CONTENT_SECTIONS}")
         for sec in REQUIRED_SECTIONS:
             if not re.search(r"^" + re.escape(h(sec)) + r"\s*$", md, flags=re.M):
                 errors.append(f"{tag}: missing section {sec}")
-
-        # Check-yourself questions must exist and be answered
-        m = re.search(r"^## Check yourself\s*$(.*?)(?=^## |\Z)", md, flags=re.M | re.S)
+        if heads and heads[-1].lower().rstrip(".:") != "exercises":
+            errors.append(f"{tag}: '## Exercises' must be the last section")
+        m = re.search(r"^## Exercises\s*$(.*?)(?=^## |\Z)", md, flags=re.M | re.S)
         n_q = len(re.findall(r"^\s*\d+[.)]", m.group(1), flags=re.M)) if m else 0
         if n_q < 3:
-            errors.append(f"{tag}: fewer than 3 numbered questions under Check yourself ({n_q})")
+            errors.append(f"{tag}: fewer than 3 numbered exercises ({n_q})")
+        m = re.search(r"^## Summary\s*$(.*?)(?=^## |\Z)", md, flags=re.M | re.S)
+        n_s = len(re.findall(r"^\s*[-*]\s+", m.group(1), flags=re.M)) if m else 0
+        if m and not (3 <= n_s <= 8):
+            warnings.append(f"{tag}: Summary has {n_s} bullets; aim for 4-7")
         title = re.match(r"^#\s+(.*)$", md, flags=re.M)
         if title and answers:
             t = title.group(1).strip()
             if t not in answers and re.sub(r"^\d+\.\s*", "", t) not in answers:
                 errors.append(f"{tag}: no section for '{t}' in 99-answers.md")
+        if _lint_prose is not None:
+            lp = _lint_prose(path)
+            for e in lp["errors"]:
+                errors.append(f"{tag}: prose: {e}")
+            for w in lp["warnings"]:
+                warnings.append(f"{tag}: prose: {w}")
 
         n_words = words_in_body(md)
-        if n_words < 500:
-            warnings.append(f"{tag}: body is short ({n_words} words)")
-        elif n_words > 1800:
+        if n_words < 1800:
+            warnings.append(f"{tag}: body is short ({n_words} words); chapters run 2000-4500")
+        elif n_words > 5000:
             warnings.append(f"{tag}: body is long ({n_words} words); consider splitting")
 
         if ORDER_WORDS.search(md):

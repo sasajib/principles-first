@@ -12,8 +12,10 @@ Repo root: the directory that contains `courses/`, `agents/` and `scripts/check_
 
 ## Agent names
 
-- Installed as a plugin: `principles-first-courses:course-author`, `principles-first-courses:source-reader`, `principles-first-courses:innovation-scout`
-- Installed by copying the agent files: `course-author`, `source-reader`, `innovation-scout`
+- Installed as a plugin: `principles-first-courses:course-author`, `principles-first-courses:source-reader`, `principles-first-courses:book-editor`, `principles-first-courses:innovation-scout`
+- Installed by copying the agent files: `course-author`, `source-reader`, `book-editor`, `innovation-scout`
+
+The product is a **book**: Part I the problems, Part II the principles (no tools), Part III the tools, a capstone. Chapters are 2,000-4,500 words with content headings, stepped worked examples, a Summary and Exercises. `references/chapter-craft.md` and `references/writing-rules.md` define the standard; `scripts/check_course.py` (which runs `scripts/lint_prose.py`) enforces it.
 
 Use whichever form exists in this session.
 
@@ -60,10 +62,11 @@ BRIEF
 - Depth: [Quick | Standard | Deep]
 - Course language: [...]
 - Innovation chapter: [on | off] because [reason]
+- Editor: on   (book-editor reviews every chapter; pass "off" only if the user asks for a fast draft)
 - User context files to read first: [paths, or "none"]
 ```
 
-The author stops after the outline and returns `## OUTLINE READY`. Show the user the outline (phases, chapter titles, one line each) and ask them to approve or edit it. Then relaunch the author with the same brief plus `Outline approved: yes` (or the edits) and `Outline file: $ROOT/courses/<slug>/outline.md`. If the user said "no questions, just build", pass `Outline approved: auto` on the first launch and skip the pause.
+The author stops after the outline and returns `## OUTLINE READY`. Show the user the outline as a compact table (Part, chapter, title, purpose, planned words) and ask them to approve or edit it. Each chapter has a full plan block in `outline.md`; mention that they can open it. Then relaunch the author with the same brief plus `Outline approved: yes` (or the edits) and `Outline file: $ROOT/courses/<slug>/outline.md`. If the user said "no questions, just build", pass `Outline approved: auto` on the first launch and skip the pause.
 
 The author ends with a `## HANDOFF` block.
 
@@ -80,7 +83,7 @@ python3 "$ROOT/scripts/check_course.py" "$ROOT/courses/<slug>"
 node "$ROOT/scripts/render_diagrams.mjs" "$ROOT/courses/<slug>"
 ```
 
-The checker fails if a Phase 1 or Phase 2 chapter names a tool, vendor or language, if a chapter is missing a required section, if answers or flashcards are missing, or if `course.json` is inconsistent. Fix every failure by editing the chapter (move tool talk to Phase 3, or reword), then re-run until it passes. Do not weaken the checker to make it pass.
+The checker fails if a Part I or II chapter names a tool, vendor or language, if a chapter is not in book form (opening scene, three or more content sections, Summary, Exercises), if the prose linter finds banned constructions, dashes over budget, AI vocabulary or meta-commentary, if answers or flashcards are missing, if the preface contains reading times or project meta, or if `course.json` is inconsistent. Fix every failure by editing the chapter, then re-run until it passes. Do not weaken the checker to make it pass.
 
 ## 7. Build the bundle and publish
 
@@ -97,7 +100,7 @@ It re-runs the checks, renders diagrams, builds the uploadable bundle with `scri
 
 Tell the user, briefly:
 - The course folder and the GitHub URL
-- Chapters per phase, sources consulted and read in full, concepts validated by quorum
+- Chapters per part and total words, sources consulted and read in full and how many were book-grade, concepts validated by quorum, editor cycles and any findings left open
 - Whether the innovation chapter ran and why
 - Any assumptions the author made that the user may want to revisit
 - The files to upload: absolute paths of `dist/<slug>.pdf` and `dist/<slug>.md`, page count of the PDF, and that answers are in `99-answers.md` on GitHub (deliberately not in the bundle unless `--with-answers` was used)

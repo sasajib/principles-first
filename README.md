@@ -42,7 +42,8 @@ python3 scripts/build_course.py courses/<slug> [--with-answers] [--formats md,pd
 ```
 courses/<slug>/
   course.json        manifest: phases, forbidden terms, metadata
-  outline.md         the approved plan
+  outline.md         the approved plan: one chapter-plan block per chapter
+  continuity.md      terminology, running-example facts, promises to the reader
   00-README.md       goal, how to study, chapter table
   01-....md          Phase 1 chapters
   0n-....md          Phase 2 chapters (pseudocode and diagrams only)
@@ -54,7 +55,7 @@ courses/<slug>/
   dist/              the uploadable bundle: <slug>.md, <slug>.pdf, <slug>.tex, diagrams/*.png
 ```
 
-Every chapter follows one template: the problem, the question it answers, the principle, a by-hand walkthrough, where it breaks, retrieval questions, a by-hand exercise, sources. See [templates/chapter.md](templates/chapter.md).
+Every chapter is a book chapter: it opens inside a concrete situation, carries three to six sections with headings that name content, shows each procedure applied step by step, gives a second real example, states where the principle breaks, and ends with a Summary and Exercises. Sources are recorded per chapter in `sources.md`, not in the running text. See [templates/chapter.md](templates/chapter.md), [references/chapter-craft.md](references/chapter-craft.md) and [references/writing-rules.md](references/writing-rules.md).
 
 ## Documentation
 
@@ -68,8 +69,9 @@ Every chapter follows one template: the problem, the question it answers, the pr
 
 ```
 .claude-plugin/     plugin and marketplace manifests
-agents/             course-author, source-reader, innovation-scout
-templates/          chapter template
+agents/             course-author, source-reader, book-editor, innovation-scout
+references/         chapter-craft.md, writing-rules.md, editor-rubric.md (the standard)
+templates/          chapter.md (chapter form), book.typ (PDF book template)
 courses/            generated courses, one folder each
 docs/               documentation
 ```
