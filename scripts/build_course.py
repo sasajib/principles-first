@@ -64,21 +64,24 @@ def main() -> int:
                            capture_output=True)
 
     parts: list[str] = []
-    parts.append(f"---\ntitle: \"{title}\"\nsubtitle: \"A principles-first course\"\n"
+    parts.append(f"---\ntitle: \"{title}\"\nsubtitle: \"Problems first, principles second, tools last\"\n"
                  f"date: \"{manifest.get('generated_at', '')}\"\nlang: {manifest.get('language', 'en')}\n"
                  f"toc: true\ntoc-depth: 2\nnumbersections: false\n---\n")
     readme = (folder / "00-README.md").read_text()
     readme = re.sub(r"^# .*\n", "", readme, count=1)  # pandoc title block carries the title
-    readme = re.sub(r"^## Files\s*$.*?(?=^## |\Z)", "", readme, flags=re.M | re.S)  # folder listing is meaningless in a bundle
-    parts.append(readme.strip() + "\n\n\\newpage\n")
+    for sec in ("Files", "Innovation chapter", "Generation notes"):   # project meta, not book content
+        readme = re.sub(r"^## " + sec + r"\s*$.*?(?=^## |\Z)", "", readme, flags=re.M | re.S)
+    readme = re.sub(r"^## ", "### ", readme, flags=re.M)
+    readme = "# Preface\n\n" + readme.strip()
+    parts.append(readme + "\n\n\\newpage\n")
 
     phase_titles = {}
-    for name, label in (("problems", "Phase 1 — The problems"), ("principles", "Phase 2 — The principles"),
-                        ("tools", "Phase 3 — The tools"), ("capstone", "Capstone")):
+    for name, label in (("problems", "Part I — The problems"), ("principles", "Part II — The principles"),
+                        ("tools", "Part III — The tools"), ("capstone", "Capstone")):
         for f in phases.get(name, []):
             phase_titles.setdefault(f, label)
     for f in extra:
-        phase_titles.setdefault(f, "Phase 3 — The tools")
+        phase_titles.setdefault(f, "Part III — The tools")
 
     last_phase = None
     for fname in order:

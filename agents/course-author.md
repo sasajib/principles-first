@@ -108,17 +108,17 @@ Write `outline.md`:
 Goal: <one sentence>  | Learner: <...> | Depth: <...> | Language: <...>
 Prerequisites: <...>
 
-## Phase 1 — The problems
-01. <title> — problem: <...> | principle: none yet | ~<min> min
-## Phase 2 — The principles
-0n. <title> — problem: <...> | principle: <...> | ~<min> min
-## Phase 3 — The tools
-0n. <title> — implements: ch <x>, <y> | tools: <...> | ~<min> min
+## Part I — The problems
+01. <title> — problem: <...> | principle: none yet
+## Part II — The principles
+0n. <title> — problem: <...> | principle: <...>
+## Part III — The tools
+0n. <title> — implements: ch <x>, <y> | tools: <...>
 ## Capstone
 0n. <title>
 ```
 
-Also write a first `course.json` (schema below) with `status: "outline"`.
+Also write a first `course.json` (schema below) with `status: "outline"`. Never put reading-time estimates anywhere in the course.
 
 If the brief says `Outline approved: yes` or `auto`, continue. Otherwise **stop here** and end your response with:
 
@@ -173,6 +173,7 @@ Writing rules:
 
 ### STEP 6: ASSEMBLE
 
+- `00-README.md` is the **preface of a book**, not a project readme. Contents, in this order: `# <Course title>`; one paragraph on what the book is about and the problem it solves for the reader; **Who this book is for** (the learner and what they already know); **What you will be able to do** (the end goal as 3-5 concrete abilities); **How the book is organised** (Part I the problems, Part II the principles with no tools, Part III the tools mapped to principles, capstone), with a table: Part | Chapter | Title | The question it answers; **How to read it** (attempt the questions before looking anywhere, do the by-hand exercise, do not open any tool before Part III); **Prerequisites**. Nothing else: no reading-time estimates, no file lists, no notes about how the book was generated, no study-tool instructions. Those belong in `course.json` and `research-log.md`.
 - `99-answers.md`: `## <N>. <Chapter title>` then numbered answers matching every "Check yourself" question, plus a model solution or rubric for each "Do it by hand".
 - `sources.md`: table (chapter, type, author/org, title, URL) and a "Single-source claims" list.
 - `research-log.md`: keep your log plus a metadata block: depth, searches, sources found, read in full, readers launched and model, verified directly, failed fetches, quorum-validated concepts, single-source concepts, recursive rounds, YouTube status.
