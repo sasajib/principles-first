@@ -1,6 +1,7 @@
 {
   "name": "principles-first-courses",
   "version": "0.4.0",
+  "description": "Research-driven, principles-first course generator for Claude Code. Teaches the problem and the principle before any tool or language, then builds a Markdown, PDF and LaTeX bundle you can upload to any reader or knowledge base.",
   "author": { "name": "sasajib", "url": "https://github.com/sasajib" },
   "repository": "https://github.com/sasajib/principles-first",
   "license": "MIT",

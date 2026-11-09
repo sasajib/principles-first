@@ -2,17 +2,17 @@
 
 ## Install the plugin
 
-Local path (recommended while you iterate on the agents):
-
-```
-/plugin marketplace add ~/Desktop/projects/official/ai-development/principles-first-courses
-/plugin install principles-first-courses@principles-first-courses
-```
-
-From GitHub (works on another machine once `gh auth login` is done, since the repo is private):
+From GitHub:
 
 ```
 /plugin marketplace add sasajib/principles-first
+/plugin install principles-first-courses@principles-first-courses
+```
+
+From a local clone, which is what you want while you edit the agents or skills:
+
+```
+/plugin marketplace add ~/path/to/principles-first
 /plugin install principles-first-courses@principles-first-courses
 ```
 
@@ -40,7 +40,7 @@ What happens:
 1. **Scoping.** Up to three questions: who is the learner, what should they be able to do, how deep. Answer in one line each. Say "no questions, just build" to skip everything including outline approval.
 2. **Research.** Parallel source-reader agents read real articles. Claims need three independent sources to be stated as fact.
 3. **Outline approval.** You get the three-phase outline. Reply "approve" or list edits ("merge chapters 4 and 5", "add a chapter on X", "move Y to Phase 3").
-4. **Writing.** One file per chapter. 10 to 20 minutes for Standard, 30+ for Deep.
+4. **Writing.** One file per chapter, 2,000 to 4,500 words each, then a full-book editing pass. This is the slow part and it is a book, not a chat answer: a Standard course is 10 to 14 chapters and about 40,000 words, from 15 to 25 sources read. Expect hours of agent time and hundreds of model calls on your own Claude Code plan. Run a Quick course first to see the cost before committing to Standard or Deep.
 5. **Innovation chapter.** Runs automatically for practice fields (marketing, product, management), skipped for foundational ones (math, algorithms, physics). The reason is recorded in `course.json` and `00-README.md`.
 6. **Quality gate.** `scripts/check_course.py` must pass. The author fixes chapters, never the checker.
 7. **Bundle and publish.** `build_course.py` writes `dist/<slug>.md`, `.pdf`, `.tex` and `diagrams/*.png`; then commit and push.

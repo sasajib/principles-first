@@ -1,4 +1,20 @@
 node_modules/
-
-.DS_Store
 courses/**/.build/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# OS and editor noise
+.DS_Store
+.idea/
+.vscode/
+
+# Nothing secret belongs in here; these are blocked so an accident stays local
+.env
+.env.*
+*.pem
+*.key
+*.p12
+credentials.json
+
