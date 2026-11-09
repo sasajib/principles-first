@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 250" width="940" height="250" role="img" aria-label="principles-first run: scope, research, outline approval, chapters gated by script, editor pass, bundle">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .box  { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; }
+      .gate { fill: #eef2ff; stroke: #a5b4fc; stroke-width: 1.5; }
+      .out  { fill: #ecfdf5; stroke: #6ee7b7; stroke-width: 1.5; }
+      .t    { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #0f172a; }
+      .step { font-size: 14px; font-weight: 600; }
+      .body { font-size: 11.5px; fill: #475569; }
+      .lbl  { font-size: 11px; fill: #64748b; letter-spacing: .02em; }
+      .flow { stroke: #64748b; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <text class="t lbl" x="14" y="26">one run of /course</text>
+
+  <!-- 1 scope -->
+  <rect class="box" x="14" y="52" width="134" height="104" rx="10"/>
+  <text class="t step" x="26" y="80">1. Scope</text>
+  <text class="t body" x="26" y="102">at most 3 questions</text>
+  <text class="t body" x="26" y="120">learner, end goal,</text>
+  <text class="t body" x="26" y="138">depth</text>
+
+  <!-- 2 research -->
+  <rect class="box" x="170" y="52" width="134" height="104" rx="10"/>
+  <text class="t step" x="182" y="80">2. Research</text>
+  <text class="t body" x="182" y="102">8 to 40 sources read</text>
+  <text class="t body" x="182" y="120">sources.md, every</text>
+  <text class="t body" x="182" y="138">claim traceable</text>
+
+  <!-- 3 outline -->
+  <rect class="box" x="326" y="52" width="134" height="104" rx="10"/>
+  <text class="t step" x="338" y="80">3. Outline</text>
+  <text class="t body" x="338" y="102">one plan block per</text>
+  <text class="t body" x="338" y="120">chapter</text>
+  <text class="t body" x="338" y="138" font-weight="600">you approve it</text>
+
+  <!-- 4 chapters + gate -->
+  <rect class="gate" x="482" y="52" width="134" height="104" rx="10"/>
+  <text class="t step" x="494" y="80">4. Chapters</text>
+  <text class="t body" x="494" y="102">one at a time, then</text>
+  <text class="t body" x="494" y="120">lint_prose.py and</text>
+  <text class="t body" x="494" y="138">check_course.py</text>
+
+  <!-- 5 editor -->
+  <rect class="box" x="638" y="52" width="134" height="104" rx="10"/>
+  <text class="t step" x="650" y="80">5. Editor</text>
+  <text class="t body" x="650" y="102">critique, then rewrite</text>
+  <text class="t body" x="650" y="120">against a written</text>
+  <text class="t body" x="650" y="138">rubric</text>
+
+  <!-- 6 bundle -->
+  <rect class="out" x="794" y="52" width="132" height="104" rx="10"/>
+  <text class="t step" x="806" y="80">6. Bundle</text>
+  <text class="t body" x="806" y="102">dist/&lt;slug&gt;.pdf</text>
+  <text class="t body" x="806" y="120">dist/&lt;slug&gt;.md</text>
+  <text class="t body" x="806" y="138">dist/&lt;slug&gt;.tex</text>
+
+  <path class="flow" d="M148 104 H168"/>
+  <path class="flow" d="M304 104 H324"/>
+  <path class="flow" d="M460 104 H480"/>
+  <path class="flow" d="M616 104 H636"/>
+  <path class="flow" d="M772 104 H792"/>
+
+  <!-- gate loop -->
+  <path class="flow" d="M549 156 V186" marker-end="none"/>
+  <path class="flow" d="M549 186 H604" marker-end="none"/>
+  <path class="flow" d="M604 186 V158"/>
+  <text class="t body" x="556" y="206" text-anchor="middle" font-size="11">fail: rewrite the chapter</text>
+  <text class="t body" x="700" y="186" text-anchor="middle" font-size="11">the gate is a hard stop before the bundle</text>
+</svg>

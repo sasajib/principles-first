@@ -1,0 +1,29 @@
+principles-first
+Copyright (c) 2026 Shakil Ahmed (sasajib)
+
+This software is released under the MIT License; see LICENSE.
+
+It adapts work from the following MIT-licensed projects. Their notices are
+reproduced here as the MIT License requires.
+
+1. klausners/course-builder
+   Adapted in: agents/source-reader.md, scripts/youtube-transcript.sh, and the
+   research steps of agents/course-author.md.
+   Copyright (c) 2026 klausners. MIT License.
+
+2. luquiluke/claude-book-skill
+   Adapted in: references/writing-rules.md and templates/chapter.md.
+   Copyright (c) luquiluke. MIT License.
+
+3. blader/humanizer
+   Adapted in: the anti-AI-writing catalogue in references/writing-rules.md.
+   Copyright (c) blader. MIT License.
+
+4. seba-cascardo/book-factory
+   Adapted in: the editor loop in agents/book-editor.md and
+   references/editor-rubric.md, and the "counted by a script" rule enforced by
+   scripts/check_course.py.
+   Copyright (c) seba-cascardo. MIT License.
+
+Runtime dependencies, not vendored here: beautiful-mermaid (MIT, lukilabs),
+pandoc (GPL), Typst (Apache-2.0).
