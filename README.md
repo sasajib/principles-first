@@ -202,6 +202,6 @@ rendered with [beautiful-mermaid](https://github.com/lukilabs/beautiful-mermaid)
 
 ## What is original
 
-The skill orchestration, the three depth levels, the gate and the bundle assembly are original work.
-NOTICE credits the four MIT projects above; the research agent, the writing rules, the editor loop and
-the rubric each build on them.
+The skill orchestration, the three depth levels, the gate's hard stop and the bundle assembly are
+original work. NOTICE credits the four MIT projects above; the research agent, the writing rules,
+the editor loop, the rubric and one counting rule in the checker each build on them.
