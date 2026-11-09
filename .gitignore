@@ -1,3 +1,7 @@
+# Generated output is not part of this repo: the plugin is the artefact
+courses/*
+!courses/README.md
+
 node_modules/
 courses/**/.build/
 

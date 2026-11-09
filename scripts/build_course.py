@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Bundle a course folder into single files you can read or upload anywhere (a reader, a study app, print).
 
 Usage: python3 scripts/build_course.py courses/<slug> [--with-answers] [--formats md,pdf,tex]
 

@@ -43,12 +43,13 @@ What happens:
 4. **Writing.** One file per chapter, 2,000 to 4,500 words each, then a full-book editing pass. This is the slow part and it is a book, not a chat answer: a Standard course is 10 to 14 chapters and about 40,000 words, from 15 to 25 sources read. Expect hours of agent time and hundreds of model calls on your own Claude Code plan. Run a Quick course first to see the cost before committing to Standard or Deep.
 5. **Innovation chapter.** Runs automatically for practice fields (marketing, product, management), skipped for foundational ones (math, algorithms, physics). The reason is recorded in `course.json` and `00-README.md`.
 6. **Quality gate.** `scripts/check_course.py` must pass. The author fixes chapters, never the checker.
-7. **Bundle and publish.** `build_course.py` writes `dist/<slug>.md`, `.pdf`, `.tex` and `diagrams/*.png`; then commit and push.
+7. **Build the bundle.** `build_course.py` writes `dist/<slug>.md`, `.pdf`, `.tex` and `diagrams/*.png`.
+8. **You read it.** Open `dist/<slug>.pdf` in any reader, or hand the file to a study app you use.
 
 ## Add to an existing course
 
 ```
-/course courses/example-course add a chapter on attribution
+/course courses/<slug> add a chapter on attribution
 ```
 
 The author reads the manifest, researches only the new material, inserts the chapter in the right phase, renumbers if needed, and updates the README, answers and flashcards.
@@ -60,7 +61,7 @@ python3 scripts/check_course.py courses/<slug>            # errors fail, warning
 python3 scripts/check_course.py courses/<slug> --strict   # warnings fail too
 node scripts/render_diagrams.mjs courses/<slug>           # SVGs into courses/<slug>/diagrams/
 node scripts/render_diagrams.mjs courses/<slug> --theme tokyo-night --ascii
-bash scripts/publish.sh <slug> "message"                  # check + render + commit + push
+bash scripts/build_bundle.sh <slug>                       # check + render + build
 ```
 
 Checker errors and what to do:

@@ -26,6 +26,7 @@ A separate `book-editor` agent reviews each chapter against `references/editor-r
 
 ## 5. Active learning
 
+Each chapter ends with 3 to 5 retrieval questions (answers elsewhere) and one by-hand exercise. Retrieval practice and spaced review are the two best-supported techniques in the learning literature, and both are useless if the answer sits next to the question. Flashcards go to Anki.
 
 Research behind it: an unrestricted chatbot during practice lowered unassisted exam scores by 17% versus no AI, while a hint-only tutor did not (Bastani et al., *Generative AI without guardrails can harm learning*, PNAS 2025). A one-step-at-a-time AI tutor roughly doubled gains over an active-learning class (Kestin et al., Scientific Reports 2025). Heavy reliance on AI for writing reduced recall and engagement (MIT Media Lab, 2025, small sample).
 

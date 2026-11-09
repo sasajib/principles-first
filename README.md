@@ -1,8 +1,10 @@
 # principles-first
 
 A Claude Code plugin that turns a topic into a book-length course, in the order a learner should meet it:
-the problems first, then one principle per chapter, and the tools only at the end. One finished course ships
-with it — 14 chapters on marketing — as proof of what it produces.
+the problems first, then one principle per chapter, and the tools only at the end.
+
+This repo is the plugin only. Courses you generate land in `courses/`, which is ignored here on purpose,
+so nothing you build with it is published by it.
 
 The plugin is the interesting part. It is a small team of agents with a written standard and a script that
 enforces it: research, outline, approval, one chapter at a time, a prose linter, an editor pass, then a
@@ -50,18 +52,16 @@ Open Claude Code inside the repo, so courses land in `courses/`:
 ```bash
 /course digital marketing                  # standard depth, the default
 /course data structures and algorithms deep
-/course courses/example-course          # add a chapter to an existing course
+/course courses/<slug>                     # add a chapter to an existing course
 ```
 
 The skill asks at most three questions (who is the learner, what should they be able to do, how deep), shows
-an outline to approve, writes one file per chapter, runs the quality gate, builds the bundle, then commits and
-pushes.
+an outline to approve, writes one file per chapter, runs the quality gate and builds the bundle.
 
 ## What it costs
 
 Be clear about this before you run it: a course is a book, not a chat answer. Standard depth is 15 to 25
-sources read, 10 to 14 chapters at 2,000 to 4,500 words each, and a full-book editing pass. The included
-marketing course is 14 chapters, about 42,000 words, from 52 sources.
+sources read, 10 to 14 chapters at 2,000 to 4,500 words each, and a full-book editing pass.
 
 That is hundreds of model calls on your own Claude Code plan, and the research and rewrite passes read far
 more text than the output contains. I have not measured wall-clock time or token spend precisely, so I will
@@ -120,18 +120,18 @@ principle breaks, a Summary and Exercises. The standard lives in `templates/chap
 | `scripts/build_course.py` | Nothing — it builds, and fails loudly if pandoc or typst are missing. |
 
 The agents cannot skip the gate: `skills/course/SKILL.md` orders the run and the gate is a hard stop before
-publish.
+the bundle is built.
 
 ## Repository layout
 
 ```
 .claude-plugin/     plugin and marketplace manifests
-skills/course/      the /course skill: scope, outline approval, gate, publish
+skills/course/      the /course skill: scope, outline approval, gate, bundle
 agents/             course-author, source-reader, book-editor, innovation-scout
 references/         chapter-craft.md, writing-rules.md, editor-rubric.md (the standard)
-scripts/            check_course.py, lint_prose.py, build_course.py, render_diagrams.mjs, publish.sh
+scripts/            check_course.py, lint_prose.py, build_course.py, render_diagrams.mjs, build_bundle.sh
 templates/          chapter.md (chapter form), book.typ (PDF book template)
-courses/            generated courses, one folder each
+courses/            where generated courses land; ignored here, so this repo ships no course
 docs/               documentation
 ```
 
@@ -153,4 +153,4 @@ The writing rules and the anti-AI catalogue are adapted from
 [blader/humanizer](https://github.com/blader/humanizer). The editor loop and the "counted by a script" rule
 follow [seba-cascardo/book-factory](https://github.com/seba-cascardo/book-factory). All MIT. Diagrams are
 rendered with [beautiful-mermaid](https://github.com/lukilabs/beautiful-mermaid) (MIT). PDF via
-[pandoc](https://pandoc.org) and [Typst](https://github.com/typst/typst). Courses are studied well with
+[pandoc](https://pandoc.org) and [Typst](https://github.com/typst/typst).

@@ -85,21 +85,22 @@ node "$ROOT/scripts/render_diagrams.mjs" "$ROOT/courses/<slug>"
 
 The checker fails if a Part I or II chapter names a tool, vendor or language, if a chapter is not in book form (opening scene, three or more content sections, Summary, Exercises), if the prose linter finds banned constructions, dashes over budget, AI vocabulary or meta-commentary, if answers or flashcards are missing, if the preface contains reading times or project meta, or if `course.json` is inconsistent. Fix every failure by editing the chapter, then re-run until it passes. Do not weaken the checker to make it pass.
 
-## 7. Build the bundle and publish
+## 7. Build the bundle
 
 Ask nothing. Run:
 
 ```bash
-bash "$ROOT/scripts/publish.sh" "<slug>"
+bash "$ROOT/scripts/build_bundle.sh" "<slug>"
 ```
 
-It re-runs the checks, renders diagrams, builds the uploadable bundle with `scripts/build_course.py` into `courses/<slug>/dist/` (`<slug>.md` single Markdown with diagrams as text drawings, `<slug>.pdf` with diagrams as images, `<slug>.tex`, and `diagrams/*.png`), commits `courses/<slug>` and pushes. If the push fails (no remote, no network), say so and leave the commit local. If the PDF step fails, say so and still deliver the Markdown.
+It re-runs the checks, renders diagrams, builds the uploadable bundle with `scripts/build_course.py` into `courses/<slug>/dist/` (`<slug>.md` single Markdown with diagrams as text drawings, `<slug>.pdf` with diagrams as images, `<slug>.tex`, and `diagrams/*.png`). Generated courses are ignored by git here, so the script never commits or pushes. If the PDF step fails, say so and still deliver the Markdown.
 
+Do not upload the bundle anywhere yourself. Give the user the file paths and let them choose the reader or study app.
 
 ## 8. Deliver
 
 Tell the user, briefly:
-- The course folder and the GitHub URL
+- The course folder and the bundle paths
 - Chapters per part and total words, sources consulted and read in full and how many were book-grade, concepts validated by quorum, editor cycles and any findings left open
 - Whether the innovation chapter ran and why
 - Any assumptions the author made that the user may want to revisit

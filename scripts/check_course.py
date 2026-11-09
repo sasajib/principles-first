@@ -146,6 +146,7 @@ def main() -> int:
         pre = (folder / "00-README.md").read_text()
         if re.search(r"\b\d+\s*(?:min|mins|minutes|hours?)\b", pre, flags=re.I):
             errors.append("00-README.md: contains reading-time estimates; the preface of a book has none")
+        for bad in ("## Files", "## Innovation chapter", "Phase 1", "Phase 2", "Phase 3", "flashcards.tsv"):
             if bad in pre:
                 errors.append(f"00-README.md: contains '{bad}'; project meta does not belong in the preface")
 

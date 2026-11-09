@@ -18,8 +18,9 @@ scripts/check_course.py              quality gate: structure, principles-first, 
 scripts/lint_prose.py                anti-AI prose catalogue, counted by script
 scripts/render_diagrams.mjs          Mermaid → SVG via beautiful-mermaid
 scripts/build_course.py              bundle: dist/<slug>.md (ASCII diagrams), .pdf (PNG diagrams, typst), .tex
-scripts/publish.sh                   check → render → build → commit + push courses/<slug>
+scripts/build_bundle.sh              check → render → build one course bundle (no git)
    ▼
+you read dist/<slug>.pdf, dist/<slug>.md or dist/<slug>.tex anywhere
 ```
 
 ## Pieces
@@ -39,15 +40,19 @@ scripts/publish.sh                   check → render → build → commit + pus
 | `scripts/check_course.py` | Enforces: phases, forbidden terms, fences, sections, questions answered, flashcards | You add a heading, a file, or a new rule. Keep errors strict; add soft rules as warnings |
 | `scripts/render_diagrams.mjs` | Renders ```mermaid blocks to `diagrams/*.svg` (and `.txt` with `--ascii`) | You want another theme or output |
 | `scripts/build_course.py` | Merges chapters into one document; converts diagrams (PNG for PDF/LaTeX, text drawing for Markdown); answer key excluded unless `--with-answers` | You change the bundle layout, page setup or engine |
-| `scripts/publish.sh` | check → render → build → commit → push one course | You change the branch |
+| `scripts/build_bundle.sh` | check → render → build one course bundle | You want a different pipeline |
 | `templates/chapter.md` | The chapter skeleton the checker expects | Together with the checker and the author |
+| `courses/<slug>/course.json` | Manifest the checker relies on | Generated; edit only to fix phase membership or forbidden terms |
 
 ## Design decisions
 
+- **One Markdown file per chapter**, not one big file. A reader can quiz a single chapter, diffs stay readable, and incremental mode can insert a chapter without rewriting everything.
 - **Counted means counted by a script.** The prose rules that can be counted live in `lint_prose.py`; agents copy its numbers and never recount by hand (a rule borrowed from book-factory).
 - **The checker is the contract.** Agents are told to fix chapters, never the checker. If a rule is wrong, change it here deliberately, with the reason in the commit message.
 - **Mermaid stays in the chapter sources.** GitHub renders it natively. The bundle converts every diagram (PNG in PDF/LaTeX, text drawing in the single Markdown) because uploaded documents go through parsers that do not run Mermaid. SVG/PNG are derived artefacts, regenerated, never hand-edited.
+- **The deliverable is a document, not a service.** You get one PDF, one Markdown file and one LaTeX source, and the plugin stays out of whatever you read them in.
 - **Research is delegated to cheap readers** (from course-builder). The author's context holds notes, not raw articles, which leaves room for synthesis.
+- **Generated output is ignored.** The plugin is the artefact. A course you build stays local unless you deliberately change `.gitignore`.
 
 ## Local development
 
