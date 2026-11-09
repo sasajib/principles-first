@@ -199,3 +199,9 @@ The writing rules and the anti-AI catalogue are adapted from
 follow [seba-cascardo/book-factory](https://github.com/seba-cascardo/book-factory). All MIT. Diagrams are
 rendered with [beautiful-mermaid](https://github.com/lukilabs/beautiful-mermaid) (MIT). PDF via
 [pandoc](https://pandoc.org) and [Typst](https://github.com/typst/typst).
+
+## What is original
+
+The skill orchestration, the three depth levels, the gate and the bundle assembly are original work.
+NOTICE credits the four MIT projects above; the research agent, the writing rules, the editor loop and
+the rubric each build on them.
