@@ -1,0 +1,81 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Python scripts compile on 3.9
+        run: python3 -m py_compile scripts/check_course.py scripts/lint_prose.py scripts/build_course.py
+
+      - name: Shell scripts parse
+        run: |
+          bash -n scripts/build_bundle.sh
+          bash -n scripts/youtube-transcript.sh
+
+      - name: Node script parses
+        run: node --check scripts/render_diagrams.mjs
+
+      - name: JSON parses
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, sys
+          bad = []
+          for path in sorted(pathlib.Path(".").rglob("*.json")):
+              if "node_modules" in path.parts:
+                  continue
+              try:
+                  json.loads(path.read_text())
+              except Exception as exc:
+                  bad.append("%s: %s" % (path, exc))
+          print("\n".join(bad) if bad else "JSON ok")
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Relative links resolve
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, sys
+          root = pathlib.Path(".").resolve()
+          files = sorted(root.glob("*.md")) + sorted(root.glob("docs/*.md")) + sorted(root.glob("courses/*.md"))
+          bad = []
+          for md in files:
+              for target in re.findall(r"\]\(([^)\s]+)", md.read_text()):
+                  if target.startswith(("http://", "https://", "mailto:", "#")):
+                      continue
+                  path = target.split("#", 1)[0]
+                  if path and not (md.parent / path).exists():
+                      bad.append("%s -> %s" % (md.relative_to(root), target))
+          print("\n".join(bad) if bad else "links ok")
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Scripts answer --help with usage
+        run: |
+          python3 - <<'PY'
+          import subprocess, sys
+          ok = True
+          for name in ("check_course", "build_course", "lint_prose"):
+              run = subprocess.run([sys.executable, "scripts/%s.py" % name, "--help"], capture_output=True, text=True)
+              good = run.returncode == 2 and "Usage:" in run.stdout and "FAIL" not in run.stdout
+              print("%s: rc=%d %s" % (name, run.returncode, "ok" if good else "BAD"))
+              ok = ok and good
+          sys.exit(0 if ok else 1)
+          PY
