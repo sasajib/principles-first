@@ -100,11 +100,12 @@ def find_forbidden(text: str, terms: list[str]) -> list[tuple[str, int]]:
 
 
 def main() -> int:
-    if len(sys.argv) < 2:
+    args = [a for a in sys.argv[1:] if not a.startswith("-")]
+    if not args:
         print(__doc__)
         return 2
     strict = "--strict" in sys.argv
-    folder = Path(sys.argv[1]).expanduser().resolve()
+    folder = Path(args[0]).expanduser().resolve()
     errors: list[str] = []
     warnings: list[str] = []
 

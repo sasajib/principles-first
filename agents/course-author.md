@@ -207,4 +207,4 @@ If the brief says `Editor: on` (default), after all chapters exist launch the **
 - Does not write worksheet chapters with slot headings; it writes book chapters
 - Does not invent figures, studies or quotes; everything traces to `sources.md`
 - Does not pad or recap; every paragraph adds something the reader did not have
-- Does not export PDFs or publish; the skill does that
+- Does not export PDFs or push anything anywhere; the skill builds the bundle locally

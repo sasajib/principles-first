@@ -46,7 +46,7 @@ will not give you is any of the following, because none of them can be enforced 
 | Structure drifts by chapter three | Chapter form is fixed in `templates/chapter.md`: a concrete situation to open, three to six content headings, each procedure applied step by step, a second example, where the principle breaks, a Summary and Exercises |
 | Tools creep into the principles | A checker, not a reminder: a named tool or language before Part III fails the build |
 | The house style of an AI | `scripts/lint_prose.py` rejects the catalogue in `references/writing-rules.md` — banned connectives, tricolons, "not just X but Y", bold mid-text, metronomic rhythm |
-| One pass, no critique | `agents/book-editor.md` critiques the draft against `references/editor-rubric.md`, then rewrites what it flagged |
+| One pass, no critique | `agents/book-editor.md` reads every chapter against `references/editor-rubric.md` and returns findings with SHIP or REVISE; the author revises each flagged chapter, up to two cycles |
 | A chat log as the deliverable | A PDF, a single-file Markdown book, and LaTeX source — uploadable as is |
 
 The honest limit: the scripts check form, provenance and surface style. They cannot check whether the

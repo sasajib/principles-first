@@ -99,4 +99,4 @@ The PDF uses `templates/book.typ` (title page, contents, part pages, chapter pag
 
 ## Cost and time
 
-A Standard course uses roughly the tokens of a long coding session (one Opus author, 4-8 Haiku readers, optional Opus scout). Deep roughly doubles that. Quick is a third.
+A Standard course uses roughly the tokens of a long coding session: one Opus author, 4-8 Haiku readers, one Opus editor call per chapter, and the optional Opus scout. Deep roughly doubles that. Quick is a third.
