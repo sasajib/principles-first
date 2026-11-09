@@ -27,7 +27,7 @@ you read dist/<slug>.pdf, dist/<slug>.md or dist/<slug>.tex anywhere
 
 | Path | Role | Change it when |
 |---|---|---|
-| `skills/course/SKILL.md` | Scoping questions, innovation auto-decision, outline pause, gate, bundle, publish, delivery summary |
+| `skills/course/SKILL.md` | Scoping questions, innovation auto-decision, outline pause, gate, bundle, delivery summary |
 | `agents/course-author.md` | Research depth table, source priorities, outline design, chapter template, manifest schema, self-check | You want to change the pedagogy, phase structure or output files |
 | `agents/source-reader.md` | Reads 3-4 sources and returns structured notes (cheap model) | You want readers to extract something new |
 | `agents/book-editor.md` | Reviews one chapter against `references/editor-rubric.md`; returns findings and SHIP/REVISE | You change the rubric or want a different review depth |

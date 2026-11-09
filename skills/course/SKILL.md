@@ -30,7 +30,7 @@ Ask at most 3 questions in one AskUserQuestion call. Skip any the request alread
 
 1. **Learner and starting level**: who is this for, what do they already know?
 2. **End goal**: one sentence, what should they be able to DO afterwards?
-3. **Depth**: Quick (8-12 sources, 6-8 chapters), Standard (15-25 sources, 10-14 chapters, default), Deep (25-40 sources, 16-24 chapters, recursive research, 30+ minutes).
+3. **Depth**: Quick (8-12 sources, 6-8 chapters), Standard (15-25 sources, 10-14 chapters, default), Deep (25-40 sources, 16-24 chapters, recursive research, hours of agent time).
 
 Settle without asking: course language (language of the request unless `--lang`), slug (kebab-case topic), and the innovation decision below.
 
@@ -104,4 +104,4 @@ Tell the user, briefly:
 - Chapters per part and total words, sources consulted and read in full and how many were book-grade, concepts validated by quorum, editor cycles and any findings left open
 - Whether the innovation chapter ran and why
 - Any assumptions the author made that the user may want to revisit
-- The files to upload: absolute paths of `dist/<slug>.pdf` and `dist/<slug>.md`, page count of the PDF, and that answers are in `99-answers.md` on GitHub (deliberately not in the bundle unless `--with-answers` was used)
+- The files to upload: absolute paths of `dist/<slug>.pdf` and `dist/<slug>.md`, page count of the PDF, and that answers are in `99-answers.md` in the course folder (deliberately not in the bundle unless `--with-answers` was used)
